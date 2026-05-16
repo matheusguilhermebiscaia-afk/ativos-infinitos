@@ -1,6 +1,4 @@
 import { Link, useLocation } from "wouter";
-import { useAdminLogout, getGetAuthStatusQueryKey } from "@workspace/api-client-react";
-import { useQueryClient } from "@tanstack/react-query";
 import {
   LayoutDashboard,
   Smartphone,
@@ -9,7 +7,7 @@ import {
   History,
   BarChart3,
   Settings,
-  LogOut,
+  Home,
   Menu,
   X,
 } from "lucide-react";
@@ -26,17 +24,8 @@ const navItems = [
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  const [location, navigate] = useLocation();
+  const [location] = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const queryClient = useQueryClient();
-  const logout = useAdminLogout({
-    mutation: {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: getGetAuthStatusQueryKey() });
-        navigate("/admin/login");
-      },
-    },
-  });
 
   const Sidebar = () => (
     <div className="flex flex-col h-full">
@@ -71,18 +60,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       </nav>
       <div className="px-3 pb-4">
         <Link href="/">
-          <div className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-[#999] hover:text-white hover:bg-white/5 cursor-pointer transition-all mb-1">
-            <Smartphone size={16} />
-            Ver Vitrine
+          <div
+            onClick={() => setMobileOpen(false)}
+            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-[#999] hover:text-white hover:bg-white/5 cursor-pointer transition-all"
+          >
+            <Home size={16} />
+            Voltar à Tela Inicial
           </div>
         </Link>
-        <button
-          onClick={() => logout.mutate({})}
-          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-[#999] hover:text-white hover:bg-white/5 transition-all"
-        >
-          <LogOut size={16} />
-          Sair
-        </button>
       </div>
     </div>
   );

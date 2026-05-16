@@ -119,7 +119,7 @@ export default function Vitrine() {
           </div>
           <Link href="/admin">
             <button className="text-[#555] hover:text-white text-xs transition-colors px-3 py-1.5 rounded border border-[#222] hover:border-[#444]">
-              Admin
+              Administrador
             </button>
           </Link>
         </div>

@@ -1,9 +1,6 @@
-import { useEffect } from "react";
-import { Switch, Route, Router as WouterRouter, useLocation } from "wouter";
-import { QueryClient, QueryClientProvider, useQueryClient } from "@tanstack/react-query";
-import { useGetAuthStatus } from "@workspace/api-client-react";
+import { Switch, Route, Router as WouterRouter } from "wouter";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Vitrine from "@/pages/Vitrine";
-import AdminLogin from "@/pages/AdminLogin";
 import AdminDashboard from "@/pages/AdminDashboard";
 import AdminProdutos from "@/pages/AdminProdutos";
 import AdminProdutoNovo from "@/pages/AdminProdutoNovo";
@@ -20,60 +17,19 @@ const queryClient = new QueryClient({
   },
 });
 
-function AdminGuard({ children }: { children: React.ReactNode }) {
-  const { data: auth, isLoading } = useGetAuthStatus();
-  const [, navigate] = useLocation();
-  const queryClient = useQueryClient();
-
-  useEffect(() => {
-    if (!isLoading && !auth?.authenticated) {
-      navigate("/admin/login");
-    }
-  }, [isLoading, auth?.authenticated, navigate]);
-
-  if (isLoading || !auth?.authenticated) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-[#D4FF00] border-t-transparent rounded-full animate-spin" />
-      </div>
-    );
-  }
-
-  return <>{children}</>;
-}
-
 function Router() {
   return (
     <Switch>
       <Route path="/" component={Vitrine} />
-      <Route path="/admin/login" component={AdminLogin} />
-      <Route path="/admin">
-        <AdminGuard><AdminDashboard /></AdminGuard>
-      </Route>
-      <Route path="/admin/produtos">
-        <AdminGuard><AdminProdutos /></AdminGuard>
-      </Route>
-      <Route path="/admin/produtos/novo">
-        <AdminGuard><AdminProdutoNovo /></AdminGuard>
-      </Route>
-      <Route path="/admin/produtos/:id/editar">
-        <AdminGuard><AdminProdutoNovo /></AdminGuard>
-      </Route>
-      <Route path="/admin/entrada">
-        <AdminGuard><AdminEntrada /></AdminGuard>
-      </Route>
-      <Route path="/admin/saida">
-        <AdminGuard><AdminSaida /></AdminGuard>
-      </Route>
-      <Route path="/admin/historico">
-        <AdminGuard><AdminHistorico /></AdminGuard>
-      </Route>
-      <Route path="/admin/relatorios">
-        <AdminGuard><AdminRelatorios /></AdminGuard>
-      </Route>
-      <Route path="/admin/configuracoes">
-        <AdminGuard><AdminConfiguracoes /></AdminGuard>
-      </Route>
+      <Route path="/admin" component={AdminDashboard} />
+      <Route path="/admin/produtos" component={AdminProdutos} />
+      <Route path="/admin/produtos/novo" component={AdminProdutoNovo} />
+      <Route path="/admin/produtos/:id/editar" component={AdminProdutoNovo} />
+      <Route path="/admin/entrada" component={AdminEntrada} />
+      <Route path="/admin/saida" component={AdminSaida} />
+      <Route path="/admin/historico" component={AdminHistorico} />
+      <Route path="/admin/relatorios" component={AdminRelatorios} />
+      <Route path="/admin/configuracoes" component={AdminConfiguracoes} />
       <Route component={NotFound} />
     </Switch>
   );
