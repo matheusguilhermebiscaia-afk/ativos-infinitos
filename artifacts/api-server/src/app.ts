@@ -1,7 +1,6 @@
 import express, { type Express } from "express";
 import cors from "cors";
 import pinoHttp from "pino-http";
-import session from "express-session";
 import path from "path";
 import { fileURLToPath } from "url";
 import router from "./routes";
@@ -33,19 +32,6 @@ app.use(
 app.use(cors({ origin: true, credentials: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET || "infinityphone-secret",
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      httpOnly: true,
-      secure: false,
-      maxAge: 24 * 60 * 60 * 1000, // 24h
-    },
-  }),
-);
 
 app.use("/api/uploads", express.static(path.join(__dirname, "../uploads")));
 app.use("/api", router);
