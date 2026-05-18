@@ -1,5 +1,6 @@
-import express, { type Express } from "express";
+import express, { type Express, Request, Response, NextFunction } from "express";
 import cors from "cors";
+import pino from "pino";
 import pinoHttp from "pino-http";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -10,18 +11,19 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const app: Express = express();
 
+// Pino-http precisa receber o logger já instanciado
 app.use(
   pinoHttp({
-    logger,
+    logger: pino(),
     serializers: {
-      req(req) {
+      req: (req: Request) => {
         return {
-          id: req.id,
+          id: (req as any).id,
           method: req.method,
           url: req.url?.split("?")[0],
         };
       },
-      res(res) {
+      res: (res: Response) => {
         return {
           statusCode: res.statusCode,
         };
@@ -29,6 +31,7 @@ app.use(
     },
   }),
 );
+
 app.use(cors({ origin: true, credentials: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
